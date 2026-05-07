@@ -28,7 +28,7 @@ struct CreateMenuView: View {
                     iconName: "arrow.up.doc",
                     title: "Upload Pin",
                     description: "Add a single photo or video to a board",
-                    destination: AnyView(Text("Upload Pin View Placeholder").navigationTitle("Upload Pin"))
+                    destination: AnyView(UploadPinView(isPresented: $isPresented))
                 )
                 
                 Divider()
@@ -147,6 +147,113 @@ struct CreatePostView: View {
             }
         }
         .navigationTitle("Create Post")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Upload Pin View
+struct UploadPinView: View {
+    @Binding var isPresented: Bool
+    
+    @State private var caption: String = ""
+    @State private var selectedBoard: String = "Tour Aesthetics ’23"
+    @State private var isUploaded: Bool = false
+    
+    let boards = ["Tour Aesthetics ’23", "Sunlight & Guitars", "Music Video Concepts"]
+    
+    var body: some View {
+        ScrollView {
+            if isUploaded {
+                VStack(spacing: 24) {
+                    Spacer().frame(height: 80)
+                    
+                    Image(systemName: "arrow.up.circle.fill")
+                        .font(.system(size: 80))
+                        .foregroundColor(.purple)
+                    
+                    VStack(spacing: 8) {
+                        Text("Pin Uploaded")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Text("Your pin has been added to \(selectedBoard).")
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    
+                    Spacer().frame(height: 40)
+                    
+                    PrimaryButton(title: "Done") {
+                        isPresented = false
+                    }
+                }
+                .padding()
+                .transition(.scale.combined(with: .opacity))
+            } else {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Media Placeholder
+                    Button(action: {}) {
+                        VStack(spacing: 12) {
+                            Image(systemName: "photo.on.rectangle.angled")
+                                .font(.system(size: 40))
+                                .foregroundColor(.purple)
+                            Text("Add Photo or Video")
+                                .font(.headline)
+                                .foregroundColor(.purple)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 200)
+                        .background(Color.purple.opacity(0.1))
+                        .cornerRadius(16)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.purple.opacity(0.3), style: StrokeStyle(lineWidth: 2, dash: [6]))
+                        )
+                    }
+                    
+                    // Board Selector
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Select Board")
+                            .font(.headline)
+                        
+                        Picker("Select Board", selection: $selectedBoard) {
+                            ForEach(boards, id: \.self) { board in
+                                Text(board).tag(board)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .padding(.horizontal, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                    }
+                    
+                    // Caption Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Caption")
+                            .font(.headline)
+                        TextField("Write a short caption...", text: $caption, axis: .vertical)
+                            .lineLimit(3...5)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                    }
+                    
+                    Spacer().frame(height: 20)
+                    
+                    // Upload Button
+                    PrimaryButton(title: "Upload Pin") {
+                        withAnimation(.spring()) {
+                            isUploaded = true
+                        }
+                    }
+                    .disabled(caption.isEmpty)
+                    .opacity(caption.isEmpty ? 0.5 : 1.0)
+                }
+                .padding()
+            }
+        }
+        .navigationTitle("Upload Pin")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
