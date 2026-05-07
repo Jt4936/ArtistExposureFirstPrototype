@@ -10,7 +10,7 @@ struct CreateMenuView: View {
                     iconName: "square.and.pencil",
                     title: "Create Post",
                     description: "Share thoughts or media directly to your feed",
-                    destination: AnyView(Text("Create Post View Placeholder").navigationTitle("Create Post"))
+                    destination: AnyView(CreatePostView(isPresented: $isPresented))
                 )
                 
                 Divider()
@@ -51,6 +51,103 @@ struct CreateMenuView: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Create Post View
+struct CreatePostView: View {
+    @Binding var isPresented: Bool
+    
+    @State private var postTitle: String = ""
+    @State private var caption: String = ""
+    @State private var selectedTag: String? = nil
+    @State private var isPublished: Bool = false
+    
+    let tags = ["Update", "Behind-the-scenes", "Official"]
+    
+    var body: some View {
+        ScrollView {
+            if isPublished {
+                VStack(spacing: 24) {
+                    Spacer().frame(height: 80)
+                    
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 80))
+                        .foregroundColor(.purple)
+                    
+                    VStack(spacing: 8) {
+                        Text("Post Published")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Text("Your post has been shared with your followers.")
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    
+                    Spacer().frame(height: 40)
+                    
+                    PrimaryButton(title: "Done") {
+                        isPresented = false
+                    }
+                }
+                .padding()
+                .transition(.scale.combined(with: .opacity))
+            } else {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Title Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Title")
+                            .font(.headline)
+                        TextField("Post title", text: $postTitle)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                    }
+                    
+                    // Caption Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Caption")
+                            .font(.headline)
+                        TextField("Write a caption...", text: $caption, axis: .vertical)
+                            .lineLimit(4...8)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                    }
+                    
+                    // Tags
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Category")
+                            .font(.headline)
+                        
+                        HStack(spacing: 12) {
+                            ForEach(tags, id: \.self) { tag in
+                                CategoryChip(
+                                    title: tag,
+                                    isSelected: selectedTag == tag,
+                                    action: { selectedTag = tag }
+                                )
+                            }
+                        }
+                    }
+                    
+                    Spacer().frame(height: 20)
+                    
+                    // Publish Button
+                    PrimaryButton(title: "Publish Post") {
+                        withAnimation(.spring()) {
+                            isPublished = true
+                        }
+                    }
+                    .disabled(postTitle.isEmpty || caption.isEmpty)
+                    .opacity(postTitle.isEmpty || caption.isEmpty ? 0.5 : 1.0)
+                }
+                .padding()
+            }
+        }
+        .navigationTitle("Create Post")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
