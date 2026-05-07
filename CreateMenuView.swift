@@ -37,7 +37,7 @@ struct CreateMenuView: View {
                     iconName: "star.fill",
                     title: "Highlight Post",
                     description: "Feature a post as official content",
-                    destination: AnyView(Text("Highlight Post View Placeholder").navigationTitle("Highlight Post"))
+                    destination: AnyView(HighlightPostView(isPresented: $isPresented))
                 )
             }
             .navigationTitle("Create")
@@ -254,6 +254,95 @@ struct UploadPinView: View {
             }
         }
         .navigationTitle("Upload Pin")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Highlight Post View
+struct HighlightPostView: View {
+    @Binding var isPresented: Bool
+    
+    @State private var reason: String = ""
+    @State private var selectedContent: String = "Tour Announcement"
+    @State private var isHighlighted: Bool = false
+    
+    let contentOptions = ["Tour Announcement", "Studio Session", "Behind the Album"]
+    
+    var body: some View {
+        ScrollView {
+            if isHighlighted {
+                VStack(spacing: 24) {
+                    Spacer().frame(height: 80)
+                    
+                    Image(systemName: "star.circle.fill")
+                        .font(.system(size: 80))
+                        .foregroundColor(.purple)
+                    
+                    VStack(spacing: 8) {
+                        Text("Highlighted as Official Content")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                        
+                        Text("'\(selectedContent)' is now featured on your profile.")
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    
+                    Spacer().frame(height: 40)
+                    
+                    PrimaryButton(title: "Done") {
+                        isPresented = false
+                    }
+                }
+                .padding()
+                .transition(.scale.combined(with: .opacity))
+            } else {
+                VStack(alignment: .leading, spacing: 24) {
+                    
+                    // Content Selector
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Select Content to Highlight")
+                            .font(.headline)
+                        
+                        Picker("Select Content", selection: $selectedContent) {
+                            ForEach(contentOptions, id: \.self) { option in
+                                Text(option).tag(option)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .padding(.horizontal, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                    }
+                    
+                    // Reason Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Highlight Reason")
+                            .font(.headline)
+                        TextField("Why should this be highlighted?", text: $reason, axis: .vertical)
+                            .lineLimit(3...5)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                    }
+                    
+                    Spacer().frame(height: 20)
+                    
+                    // Highlight Button
+                    PrimaryButton(title: "Mark as Official Highlight") {
+                        withAnimation(.spring()) {
+                            isHighlighted = true
+                        }
+                    }
+                    .disabled(reason.isEmpty)
+                    .opacity(reason.isEmpty ? 0.5 : 1.0)
+                }
+                .padding()
+            }
+        }
+        .navigationTitle("Highlight Post")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
