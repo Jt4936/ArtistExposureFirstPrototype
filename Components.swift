@@ -85,3 +85,28 @@ struct BoardCardView: View {
         .cornerRadius(16)
     }
 }
+
+// Artist card used in Discovery view
+struct ArtistCardView: View {
+    let artist: Artist
+    
+    var body: some View {
+        VStack {
+            PlaceholderImage(color: .indigo, iconName: "person.circle.fill")
+                .frame(width: 100, height: 100)
+                .clipShape(Circle())
+            
+            Text(artist.name)
+                .font(.headline)
+                .lineLimit(1)
+            
+            Text("\(artist.followerCount / 1000)k followers")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(width: 120)
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(16)
+    }
+}

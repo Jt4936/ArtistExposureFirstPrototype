@@ -4,6 +4,8 @@ struct ArtistProfileView: View {
     @EnvironmentObject var mockData: MockData
     @Binding var artist: Artist
     
+    @State private var showCreatorStory = false
+    
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16)
@@ -55,7 +57,7 @@ struct ArtistProfileView: View {
                     
                     // Creator Story Button
                     Button(action: {
-                        // Action for creator story
+                        showCreatorStory = true
                     }) {
                         HStack {
                             Image(systemName: "play.circle.fill")
@@ -126,6 +128,9 @@ struct ArtistProfileView: View {
         }
         .edgesIgnoringSafeArea(.top)
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showCreatorStory) {
+            CreatorStoryView(artist: artist)
+        }
     }
 }
 

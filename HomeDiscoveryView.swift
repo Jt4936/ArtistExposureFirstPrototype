@@ -44,30 +44,31 @@ struct HomeDiscoveryView: View {
                         .padding(.horizontal)
                     }
                     
-                    // Artist Spotlight
-                    NavigationLink(destination: ArtistProfileView(artist: $mockData.spaceyJane)) {
-                        HStack {
-                            PlaceholderImage(color: .indigo, iconName: "person.circle.fill")
-                                .frame(width: 60, height: 60)
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading) {
-                                Text("Spotlight Artist")
-                                    .font(.caption)
-                                    .foregroundColor(.purple)
-                                Text(mockData.spaceyJane.name)
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.primary)
+                    // Featured Artists
+                    VStack(alignment: .leading) {
+                        Text("Featured Artists")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.horizontal)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                // Spacey Jane (Main Mock)
+                                NavigationLink(destination: ArtistProfileView(artist: $mockData.spaceyJane)) {
+                                    ArtistCardView(artist: mockData.spaceyJane)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                
+                                // Trending Artists
+                                ForEach($mockData.trendingArtists) { $artist in
+                                    NavigationLink(destination: ArtistProfileView(artist: $artist)) {
+                                        ArtistCardView(artist: artist)
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
                             }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+                            .padding(.horizontal)
                         }
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(16)
-                        .padding(.horizontal)
                     }
                     
                     // Discover Boards Grid

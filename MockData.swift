@@ -12,6 +12,25 @@ class MockData: ObservableObject {
         followerCount: 1250000
     )
     
+    @Published var trendingArtists: [Artist] = [
+        Artist(
+            name: "The Strokes",
+            bio: "New York City rock band.",
+            bannerImageName: "bannerPlaceholder",
+            profileImageName: "profilePlaceholder",
+            isFollowed: false,
+            followerCount: 2500000
+        ),
+        Artist(
+            name: "Phoebe Bridgers",
+            bio: "Los Angeles based singer-songwriter.",
+            bannerImageName: "bannerPlaceholder",
+            profileImageName: "profilePlaceholder",
+            isFollowed: true,
+            followerCount: 1800000
+        )
+    ]
+    
     @Published var mediaBoards: [MediaBoard] = [
         MediaBoard(
             title: "Tour Aesthetics '23",
