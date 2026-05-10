@@ -7,8 +7,11 @@ struct MediaBoardDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // Header Image
-                PlaceholderImage(color: .purple, iconName: "photo.on.rectangle")
+                Image(board.coverImageName)
+                    .resizable()
+                    .scaledToFill()
                     .frame(height: 250)
+                    .clipped()
                     .cornerRadius(16)
                     .padding(.horizontal)
                 
@@ -75,11 +78,16 @@ struct MediaBoardDetailView: View {
                 }
                 .padding(.horizontal)
                 
-                // Grid of Pins Placeholder
+                // Grid of Pins
+                let pinImages = ["board1", "board2", "board3", "highlight1", "highlight2", "strokesBanner"]
+                
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                    ForEach(0..<6, id: \.self) { _ in
-                        PlaceholderImage(color: .gray, iconName: "photo")
+                    ForEach(pinImages, id: \.self) { imageName in
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFill()
                             .frame(height: 140)
+                            .clipped()
                             .cornerRadius(8)
                     }
                 }

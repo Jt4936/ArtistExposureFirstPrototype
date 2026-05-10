@@ -68,8 +68,11 @@ struct BoardCardView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            PlaceholderImage(color: .purple, iconName: "photo.on.rectangle")
+            Image(board.coverImageName)
+                .resizable()
+                .scaledToFill()
                 .frame(height: 160)
+                .clipped()
                 .cornerRadius(12)
             
             Text(board.title)
@@ -92,7 +95,9 @@ struct ArtistCardView: View {
     
     var body: some View {
         VStack {
-            PlaceholderImage(color: .indigo, iconName: "person.circle.fill")
+            Image(artist.profileImageName)
+                .resizable()
+                .scaledToFill()
                 .frame(width: 100, height: 100)
                 .clipShape(Circle())
             

@@ -12,6 +12,29 @@ struct HomeDiscoveryView: View {
         GridItem(.flexible(), spacing: 16)
     ]
     
+    var filteredArtists: [Artist] {
+        let all = [mockData.spaceyJane] + mockData.trendingArtists
+        if searchText.isEmpty { return all }
+        return all.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    var filteredBoards: [MediaBoard] {
+        switch selectedCategory {
+        case .boards:
+            return mockData.mediaBoards
+        case .tagged:
+            return mockData.mediaBoards.filter { !$0.tags.isEmpty }
+        case .archived:
+            return []
+        case .all:
+            if searchText.isEmpty { return mockData.mediaBoards }
+            return mockData.mediaBoards.filter {
+                $0.title.localizedCaseInsensitiveContains(searchText) ||
+                $0.tags.contains(where: { $0.localizedCaseInsensitiveContains(searchText) })
+            }
+        }
+    }
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
@@ -53,16 +76,17 @@ struct HomeDiscoveryView: View {
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                // Spacey Jane (Main Mock)
-                                NavigationLink(destination: ArtistProfileView(artist: $mockData.spaceyJane)) {
-                                    ArtistCardView(artist: mockData.spaceyJane)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                                
-                                // Trending Artists
                                 ForEach($mockData.trendingArtists) { $artist in
-                                    NavigationLink(destination: ArtistProfileView(artist: $artist)) {
-                                        ArtistCardView(artist: artist)
+                                    if filteredArtists.contains(where: { $0.id == artist.id }) {
+                                        NavigationLink(destination: ArtistProfileView(artist: $artist)) {
+                                            ArtistCardView(artist: artist)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                    }
+                                }
+                                if filteredArtists.contains(where: { $0.id == mockData.spaceyJane.id }) {
+                                    NavigationLink(destination: ArtistProfileView(artist: $mockData.spaceyJane)) {
+                                        ArtistCardView(artist: mockData.spaceyJane)
                                     }
                                     .buttonStyle(PlainButtonStyle())
                                 }
@@ -79,7 +103,7 @@ struct HomeDiscoveryView: View {
                             .padding(.horizontal)
                         
                         LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(mockData.mediaBoards) { board in
+                            ForEach(filteredBoards) { board in
                                 NavigationLink(destination: MediaBoardDetailView(board: board)) {
                                     BoardCardView(board: board)
                                 }
@@ -87,6 +111,22 @@ struct HomeDiscoveryView: View {
                             }
                         }
                         .padding(.horizontal)
+                        
+                        if filteredBoards.isEmpty {
+                            VStack(spacing: 12) {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.gray.opacity(0.5))
+                                Text("No results found")
+                                    .font(.headline)
+                                    .foregroundColor(.secondary)
+                                Text("Try searching for something else")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
+                        }
                     }
                     
                     Spacer().frame(height: 80) // Space for floating button

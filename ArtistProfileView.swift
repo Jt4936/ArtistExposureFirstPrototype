@@ -15,8 +15,11 @@ struct ArtistProfileView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // Banner Placeholder
-                PlaceholderImage(color: .purple, iconName: "photo")
+                Image(artist.bannerImageName)
+                    .resizable()
+                    .scaledToFill()
                     .frame(height: 200)
+                    .clipped()
                     .overlay(
                         LinearGradient(
                             gradient: Gradient(colors: [.clear, .black.opacity(0.6)]),
@@ -92,8 +95,11 @@ struct ArtistProfileView: View {
                             ForEach(mockData.highlightedPosts) { post in
                                 NavigationLink(destination: HighlightDetailView(post: post)) {
                                     VStack(alignment: .leading) {
-                                        PlaceholderImage(color: .indigo, iconName: "star.fill")
+                                        Image(post.imageName)
+                                            .resizable()
+                                            .scaledToFill()
                                             .frame(width: 140, height: 180)
+                                            .clipped()
                                             .cornerRadius(12)
                                         Text(post.title)
                                             .font(.subheadline)

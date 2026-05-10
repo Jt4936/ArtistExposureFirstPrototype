@@ -7,8 +7,8 @@ class MockData: ObservableObject {
     @Published var spaceyJane: Artist = Artist(
         name: "Spacey Jane",
         bio: "Aussie indie rock band bringing the sunshine and heartbreak.",
-        bannerImageName: "bannerPlaceholder",
-        profileImageName: "profilePlaceholder",
+        bannerImageName: "spaceyJaneBanner",
+        profileImageName: "spaceyJaneProfile",
         isFollowed: false,
         followerCount: 1250000
     )
@@ -17,16 +17,16 @@ class MockData: ObservableObject {
         Artist(
             name: "The Strokes",
             bio: "New York City rock band.",
-            bannerImageName: "bannerPlaceholder",
-            profileImageName: "profilePlaceholder",
+            bannerImageName: "strokesBanner",
+            profileImageName: "strokesProfile",
             isFollowed: false,
             followerCount: 2500000
         ),
         Artist(
             name: "Phoebe Bridgers",
             bio: "Los Angeles based singer-songwriter.",
-            bannerImageName: "bannerPlaceholder",
-            profileImageName: "profilePlaceholder",
+            bannerImageName: "phoebeBanner",
+            profileImageName: "phoebeProfile",
             isFollowed: true,
             followerCount: 1800000
         )

@@ -7,8 +7,11 @@ struct HighlightDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // Main Content Image
-                PlaceholderImage(color: .indigo, iconName: "star.fill")
+                Image(post.imageName)
+                    .resizable()
+                    .scaledToFill()
                     .frame(height: 350)
+                    .clipped()
                     .cornerRadius(16)
                     .padding(.horizontal)
                 

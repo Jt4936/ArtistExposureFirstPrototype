@@ -11,9 +11,11 @@ struct CreatorStoryView: View {
             // Mock Video Background
             Color.black.edgesIgnoringSafeArea(.all)
             
-            PlaceholderImage(color: .purple, iconName: "play.circle.fill")
-                .opacity(0.6)
+            Image(artist.bannerImageName)
+                .resizable()
+                .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+                .opacity(0.8)
             
             VStack {
                 // Progress bar placeholder
@@ -36,7 +38,9 @@ struct CreatorStoryView: View {
                 
                 // Header Info
                 HStack {
-                    PlaceholderImage(color: .indigo, iconName: "person.circle.fill")
+                    Image(artist.profileImageName)
+                        .resizable()
+                        .scaledToFill()
                         .frame(width: 40, height: 40)
                         .clipShape(Circle())
                     
